@@ -1,0 +1,32 @@
+# Core libraries for Hoops Hustler
+nba_api==1.8.0              # NBA stats pulling
+ollama==0.4.7               # Local LLM integration
+langchain==0.3.20           # Prompt and context chaining
+streamlit==1.43.2           # Web UI
+
+# Key dependencies (pulled from your UV install)
+numpy==1.26.4               # Data handling for nba_api
+pandas==2.2.3               # Data manipulation
+requests==2.32.3            # API calls in nba_api
+pydantic==2.10.6            # Data validation in langchain
+pyyaml==6.0.2               # Config handling in langchain
+sqlalchemy==2.0.39          # Optional DB support (if we add SQLite)
+tenacity==9.0.0             # Retry logic in langchain
+httpx==0.28.1               # HTTP requests for ollama
+jinja2==3.1.6               # Templating in streamlit
+pydeck==0.9.1               # Visualization in streamlit
+altair==5.5.0               # Charts in streamlit
+
+# Additional dependencies
+openai==1.66.3              # OpenAI API integration
+tiktoken==0.9.0             # Tokenization for OpenAI
+
+# Testing dependencies
+iniconfig==2.0.0
+pluggy==1.5.0
+pytest==8.3.5
+tomli==2.2.1
+
+# Dotenv
+dotenv==0.9.9
+python-dotenv==1.0.1
