@@ -43,6 +43,13 @@ stat_labels = {
     'turnovers': 'Turnovers'
 }
 
+# Define stat categories for better presentation
+stat_categories = {
+    'Record': ['wins', 'losses'],
+    'Shooting': ['fg_pct', 'fg3_pct', 'ft_pct'],
+    'Performance': ['ppg', 'rebounds', 'assists', 'steals', 'blocks', 'turnovers']
+}
+
 # NBA team colors dictionary for better visualizations
 team_colors = {
     'Atlanta Hawks': '#E03A3E',
@@ -262,41 +269,47 @@ if st.button("Compare Teams", type="primary", use_container_width=True):
                 else:
                     st.info("Select at least 3 non-win/loss stats for a radar chart.")
             
-            # Bar Chart Tab
+            # Bar Chart Tab with categorized stats
             with viz_tabs[1]:
-                # Create a copy of viz_data to adjust percentage stats
-                viz_data_adjusted = viz_data.copy()
+                # Record Comparison (Wins and Losses)
+                if any(s in stats_to_show for s in stat_categories['Record']):
+                    st.subheader("Record Comparison")
+                    record_stats = [s for s in stats_to_show if s in stat_categories['Record']]
+                    record_data = viz_data[viz_data['Statistic'].isin([stat_labels[s] for s in record_stats])]
+                    chart = alt.Chart(record_data).mark_bar().encode(
+                        y=alt.Y('Statistic:N', title=None),
+                        x=alt.X('Value:Q', title='Count'),
+                        color=alt.Color('Team:N', scale=alt.Scale(domain=[team1, team2], range=[team1_color, team2_color])),
+                        tooltip=['Team', 'Statistic', 'Value']
+                    ).properties(height=len(record_stats)*50)
+                    st.altair_chart(chart, use_container_width=True)
                 
-                # Scale percentage stats (fg_pct, fg3_pct, ft_pct) from 0-1 to 0-100 range
-                percentage_stats = ['fg_pct', 'fg3_pct', 'ft_pct']
-                for stat_key in percentage_stats:
-                    stat_label = stat_labels[stat_key]
-                    mask = viz_data_adjusted['Statistic'] == stat_label
-                    viz_data_adjusted.loc[mask, 'Value'] = viz_data_adjusted.loc[mask, 'Value'] * 100
+                # Shooting Comparison (FG%, 3PT%, FT%)
+                if any(s in stats_to_show for s in stat_categories['Shooting']):
+                    st.subheader("Shooting Comparison")
+                    shooting_stats = [s for s in stats_to_show if s in stat_categories['Shooting']]
+                    shooting_data = viz_data[viz_data['Statistic'].isin([stat_labels[s] for s in shooting_stats])].copy()
+                    shooting_data['Value'] = shooting_data['Value'] * 100  # Scale to 0-100
+                    chart = alt.Chart(shooting_data).mark_bar().encode(
+                        y=alt.Y('Statistic:N', title=None),
+                        x=alt.X('Value:Q', title='Percentage (%)', scale=alt.Scale(domain=[0,100])),
+                        color=alt.Color('Team:N', scale=alt.Scale(domain=[team1, team2], range=[team1_color, team2_color])),
+                        tooltip=['Team', 'Statistic', alt.Tooltip('Value:Q', format='.2f')]
+                    ).properties(height=len(shooting_stats)*50)
+                    st.altair_chart(chart, use_container_width=True)
                 
-                # Ensure all values are numeric and handle any potential issues
-                viz_data_adjusted['Value'] = pd.to_numeric(viz_data_adjusted['Value'], errors='coerce')
-                
-                # Create the bar chart with dynamic scaling
-                chart = alt.Chart(viz_data_adjusted).mark_bar().encode(
-                    y=alt.Y('Statistic:N', title=None, sort=alt.EncodingSortField(field='Statistic', order='ascending')),
-                    x=alt.X('Value:Q', title='Value', scale=alt.Scale(domain=[0, max(viz_data_adjusted['Value'].max(), 100)])),
-                    color=alt.Color('Team:N', scale=alt.Scale(
-                        domain=[team1, team2],
-                        range=[team1_color, team2_color]
-                    )),
-                    tooltip=[alt.Tooltip('Team:N', title='Team'), 
-                             alt.Tooltip('Statistic:N', title='Stat'), 
-                             alt.Tooltip('Value:Q', title='Value', format='.2f')]
-                ).properties(
-                    height=len(stats_to_show) * 50,
-                    title="Team Stats Comparison"
-                ).configure_title(
-                    fontSize=16,
-                    anchor='middle'
-                )
-                
-                st.altair_chart(chart, use_container_width=True)
+                # Performance Comparison (PPG, Rebounds, Assists, etc.)
+                if any(s in stats_to_show for s in stat_categories['Performance']):
+                    st.subheader("Performance Comparison")
+                    performance_stats = [s for s in stats_to_show if s in stat_categories['Performance']]
+                    performance_data = viz_data[viz_data['Statistic'].isin([stat_labels[s] for s in performance_stats])]
+                    chart = alt.Chart(performance_data).mark_bar().encode(
+                        y=alt.Y('Statistic:N', title=None),
+                        x=alt.X('Value:Q', title='Value'),
+                        color=alt.Color('Team:N', scale=alt.Scale(domain=[team1, team2], range=[team1_color, team2_color])),
+                        tooltip=['Team', 'Statistic', 'Value']
+                    ).properties(height=len(performance_stats)*50)
+                    st.altair_chart(chart, use_container_width=True)
             
             # Head-to-Head Comparison Tab
             with viz_tabs[2]:
