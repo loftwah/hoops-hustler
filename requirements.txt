@@ -3,6 +3,7 @@ nba_api==1.8.0              # NBA stats pulling
 ollama==0.4.7               # Local LLM integration
 langchain==0.3.20           # Prompt and context chaining
 langchain-community==0.3.19 # Community extensions for langchain
+langchain-ollama==0.2.3     # Ollama integration for langchain
 streamlit==1.43.2           # Web UI
 
 # Key dependencies (pulled from your UV install)

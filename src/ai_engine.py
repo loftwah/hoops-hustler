@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
 from langchain.prompts import PromptTemplate
-from langchain_community.llms import OpenAI, Ollama
-from langchain.chains import LLMChain
+from langchain_community.llms import OpenAI
+from langchain_ollama import OllamaLLM  # Updated import for Ollama
 from pydantic import BaseModel
 import yaml
 from tenacity import retry, stop_after_attempt, wait_fixed, wait_exponential
@@ -36,7 +36,7 @@ prompt = PromptTemplate(
 # Initialize LLM based on .env settings with improved models
 use_ollama = os.getenv("USE_OLLAMA", "false").lower().strip() == "true"
 if use_ollama:
-    llm = Ollama(model=os.getenv("OLLAMA_MODEL", "llama3.2"))
+    llm = OllamaLLM(model=os.getenv("OLLAMA_MODEL", "llama3.2"))  # Updated to OllamaLLM
 else:
     api_key = os.getenv("OPENAI_API_KEY", "").strip()
     if not api_key or api_key == "your_openai_api_key":
@@ -49,8 +49,8 @@ else:
         model=os.getenv("OPENAI_MODEL", "gpt-4") # Upgraded from gpt-4o-mini
     )
 
-# Create LLM chain
-chain = LLMChain(llm=llm, prompt=prompt)
+# Create a Runnable sequence instead of LLMChain
+runnable = prompt | llm
 
 # Enhanced retry mechanism with exponential backoff
 @retry(
@@ -64,7 +64,9 @@ def generate_comparison(team1, team2, stats1, stats2):
     try:
         TeamStats(**stats1)
         TeamStats(**stats2)
-        return chain.run(team1=team1, team2=team2, stats1=stats1, stats2=stats2)
+        # Using invoke instead of run
+        result = runnable.invoke({"team1": team1, "team2": team2, "stats1": stats1, "stats2": stats2})
+        return result
     except Exception as e:
         print(f"Error generating comparison: {e}")
         return f"Analysis unavailable at this time. Both {team1} and {team2} have valid stats, but our analyst needed a timeout. Please try again."

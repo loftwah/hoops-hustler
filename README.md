@@ -17,7 +17,6 @@ A comprehensive NBA team comparison tool built with real-time stats from the NBA
 - Real-time web insights with news articles about compared teams
 - SQLite caching for faster performance with frequently compared teams
 - User customization of displayed stats
-- Feedback collection system
 
 ## Prerequisites
 
@@ -138,4 +137,4 @@ See `requirements.txt` for the full list, including:
 
 ## Contributing
 
-We welcome contributions! Feel free to submit pull requests or suggest features through the in-app feedback form.
+We welcome contributions! Feel free to submit pull requests.

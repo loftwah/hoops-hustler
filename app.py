@@ -53,12 +53,6 @@ stats_to_show = st.sidebar.multiselect(
 # Add a note about caching
 st.sidebar.info("💡 Team stats are cached for faster performance. The app makes fresh API calls only when needed.")
 
-# Add feedback section in sidebar
-st.sidebar.markdown("### Leave Feedback")
-feedback = st.sidebar.text_area("How can we improve Hoops Hustler?", placeholder="Your suggestions help us get better!")
-if st.sidebar.button("Submit Feedback"):
-    st.sidebar.success("Thanks for your feedback! We'll use it to improve the app.")
-
 if st.button("Compare Teams", type="primary"):
     # Check if teams are the same
     if team1 == team2:
