@@ -264,22 +264,36 @@ if st.button("Compare Teams", type="primary", use_container_width=True):
             
             # Bar Chart Tab
             with viz_tabs[1]:
-                # Convert the data to ensure numeric values for percentages
-                for i, row in viz_data.iterrows():
-                    if isinstance(row['Value'], str) and '%' in row['Value']:
-                        viz_data.at[i, 'Value'] = float(row['Value'].strip('%')) / 100
+                # Create a copy of viz_data to adjust percentage stats
+                viz_data_adjusted = viz_data.copy()
                 
-                # Create a simpler bar chart that works reliably
-                chart = alt.Chart(viz_data).mark_bar().encode(
-                    y=alt.Y('Statistic:N', title=None),
-                    x=alt.X('Value:Q', title='Value'),
+                # Scale percentage stats (fg_pct, fg3_pct, ft_pct) from 0-1 to 0-100 range
+                percentage_stats = ['fg_pct', 'fg3_pct', 'ft_pct']
+                for stat_key in percentage_stats:
+                    stat_label = stat_labels[stat_key]
+                    mask = viz_data_adjusted['Statistic'] == stat_label
+                    viz_data_adjusted.loc[mask, 'Value'] = viz_data_adjusted.loc[mask, 'Value'] * 100
+                
+                # Ensure all values are numeric and handle any potential issues
+                viz_data_adjusted['Value'] = pd.to_numeric(viz_data_adjusted['Value'], errors='coerce')
+                
+                # Create the bar chart with dynamic scaling
+                chart = alt.Chart(viz_data_adjusted).mark_bar().encode(
+                    y=alt.Y('Statistic:N', title=None, sort=alt.EncodingSortField(field='Statistic', order='ascending')),
+                    x=alt.X('Value:Q', title='Value', scale=alt.Scale(domain=[0, max(viz_data_adjusted['Value'].max(), 100)])),
                     color=alt.Color('Team:N', scale=alt.Scale(
                         domain=[team1, team2],
                         range=[team1_color, team2_color]
                     )),
-                    tooltip=['Team', 'Statistic', 'Value']
+                    tooltip=[alt.Tooltip('Team:N', title='Team'), 
+                             alt.Tooltip('Statistic:N', title='Stat'), 
+                             alt.Tooltip('Value:Q', title='Value', format='.2f')]
                 ).properties(
-                    height=len(stats_to_show) * 50  # Dynamic height based on number of stats
+                    height=len(stats_to_show) * 50,
+                    title="Team Stats Comparison"
+                ).configure_title(
+                    fontSize=16,
+                    anchor='middle'
                 )
                 
                 st.altair_chart(chart, use_container_width=True)
