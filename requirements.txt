@@ -34,3 +34,8 @@ iniconfig==2.0.0            # Pytest configuration
 pluggy==1.5.0               # Pytest plugin system
 pytest==8.3.5               # Testing framework
 tomli==2.2.1                # TOML parsing for pytest
+
+# New dependencies
+plotly==6.0.0
+langchain-openai==0.3.8
+newsapi==0.1.1

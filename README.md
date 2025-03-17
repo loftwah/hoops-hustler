@@ -1,18 +1,30 @@
-# Hoops Hustler
+# 🏀 Hoops Hustler
 
-A fun NBA team comparison tool built with real stats from the NBA API and AI-generated insights, powered by Streamlit.
+A comprehensive NBA team comparison tool built with real-time stats from the NBA API and AI-generated insights, powered by Streamlit.
 
 ## Features
 
-- Compare two NBA teams based on wins, losses, and points per game (PPG).
-- Visualize PPG with an Altair bar chart.
-- Get AI-driven analysis using Ollama (local) or OpenAI (API).
+- Compare any two NBA teams with detailed statistics including:
+  - Win/loss records
+  - Scoring (Points Per Game)
+  - Shooting percentages (FG%, 3PT%, FT%)
+  - Advanced metrics (rebounds, assists, steals, blocks, turnovers)
+- Interactive visualizations:
+  - Bar charts for direct stat comparisons
+  - Radar/spider charts to see team strengths
+  - Head-to-head advantage tables
+- AI-driven analysis using Ollama (local) or OpenAI (API)
+- Real-time web insights with news articles about compared teams
+- SQLite caching for faster performance with frequently compared teams
+- User customization of displayed stats
+- Feedback collection system
 
 ## Prerequisites
 
 - Python 3.10+
 - [UV](https://github.com/astral-sh/uv) for dependency management
 - [Ollama](https://ollama.ai/) (if using local LLM) or an OpenAI API key
+- (Optional) [NewsAPI](https://newsapi.org/) key for news insights
 
 ## Setup
 
@@ -44,13 +56,15 @@ A fun NBA team comparison tool built with real stats from the NBA API and AI-gen
 
    - Copy `.env.example` to `.env` and edit it:
      ```
-     OPENAI_API_KEY=your_actual_openai_api_key_here  # Required if USE_OLLAMA=false
+     OPENAI_API_KEY=your_openai_api_key  # Required if USE_OLLAMA=false
      OPENAI_URL=https://api.openai.com/v1
-     OPENAI_MODEL=gpt-4o-mini
-     USE_OLLAMA=true                          # Set to false for OpenAI
-     OLLAMA_MODEL=llama3.2                    # Default Ollama model
+     OPENAI_MODEL=gpt-4                  # Upgraded from gpt-4o-mini
+     USE_OLLAMA=true                     # Set to false for OpenAI
+     OLLAMA_MODEL=llama3.2               # Default Ollama model
+     NEWSAPI_KEY=your_newsapi_key        # For fetching news (optional)
      ```
    - For Ollama: Run `ollama serve` and ensure `llama3.2` is pulled (`ollama pull llama3.2`).
+   - For NewsAPI: Register at [newsapi.org](https://newsapi.org/) to get a free API key.
 
 6. **Run the App**:
    ```
@@ -60,8 +74,19 @@ A fun NBA team comparison tool built with real stats from the NBA API and AI-gen
 
 ## Usage
 
-- Select two NBA teams from the dropdowns.
-- Click "Compare" to see stats, a PPG chart, and an AI-generated comparison.
+- Select two NBA teams from the sidebar dropdowns.
+- Choose which stats you want to compare.
+- Click "Compare Teams" to see:
+  - Side-by-side team stats
+  - Multiple visualization options
+  - Latest news articles about the teams
+  - AI-generated analysis of the matchup
+
+## Data Caching
+
+The app uses two levels of caching:
+- SQLite database (automatic) - Stores team stats to reduce API calls
+- Streamlit caching - Further optimizes performance during a session
 
 ## Testing
 
@@ -74,15 +99,17 @@ A fun NBA team comparison tool built with real stats from the NBA API and AI-gen
 
 ```
 hoops-hustler/
-├── app.py              # Streamlit app entry point
-├── requirements.txt    # Pinned dependencies
-├── README.md           # This file
+├── app.py              # Streamlit app entry point (enhanced UI)
+├── requirements.txt    # Dependencies with versions
+├── README.md           # Documentation
 ├── .gitignore          # Ignore venv, caches, etc.
 ├── .env                # Environment variables
+├── data/               # Auto-created for SQLite caching
+│   └── teams.db        # Team stats cache
 ├── src/                # Core logic
-│   ├── data_fetch.py   # NBA API data fetching
-│   ├── ai_engine.py    # AI (Ollama/OpenAI) logic
-│   └── web_insights.py # Web context (placeholder)
+│   ├── data_fetch.py   # NBA API data fetching with caching
+│   ├── ai_engine.py    # Enhanced AI analysis
+│   └── web_insights.py # News API integration
 └── tests/              # Unit tests
     └── test_data_fetch.py
 ```
@@ -91,44 +118,24 @@ hoops-hustler/
 
 - **Ollama**: Default mode (`USE_OLLAMA=true`) requires a running Ollama instance.
 - **OpenAI**: Set `USE_OLLAMA=false` and provide a valid `OPENAI_API_KEY`.
-- **Caching**: SQLite support is available but commented out in `data_fetch.py`.
-- **Expansion**: Add more stats or real web insights in `web_insights.py`.
+- **News Insights**: Add a `NEWSAPI_KEY` for real-time news about teams.
+
+## Future Enhancements
+
+- Player-level comparisons
+- Historical performance trends
+- Social media sentiment analysis
+- Predictive matchup outcomes
+- Mobile app version
 
 ## Dependencies
 
-See `requirements.txt` for the full list, including `nba_api==1.8.0`, `streamlit==1.43.2`, `langchain==0.3.20`, `ollama==0.4.7`, and `openai==1.66.3`.
+See `requirements.txt` for the full list, including:
+- Core: `streamlit`, `pandas`, `numpy`, `altair`, `plotly`
+- Data: `nba_api`, `sqlalchemy`
+- AI: `langchain`, `openai`, `ollama`
+- Web: `requests`, `python-dotenv`
 
-````
+## Contributing
 
----
-
-### Setup Instructions
-To apply this:
-1. Replace your existing `~/g/hoops-hustler/README.md` with the above content:
-   ```bash
-   nano README.md  # Or use your editor of choice
-````
-
-- Paste the markdown, save, and exit.
-
-2. (Optional) Create an `.env.example` for reference:
-   ```bash
-   touch .env.example
-   ```
-   - Add:
-     ```
-     OPENAI_API_KEY=
-     OPENAI_URL=https://api.openai.com/v1
-     OPENAI_MODEL=gpt-4o-mini
-     USE_OLLAMA=true
-     OLLAMA_MODEL=llama3.2
-     ```
-
----
-
-### Why This Version?
-
-- **UV Focus**: Emphasizes `uv run` for consistency with your workflow.
-- **Dual LLM Support**: Clarifies how to toggle between Ollama and OpenAI.
-- **Current State**: Reflects the working app with stats, charts, and AI comparisons.
-- **Expandability**: Hints at next steps (e.g., more stats, web insights).
+We welcome contributions! Feel free to submit pull requests or suggest features through the in-app feedback form.
