@@ -264,7 +264,12 @@ if st.button("Compare Teams", type="primary", use_container_width=True):
             
             # Bar Chart Tab
             with viz_tabs[1]:
-                # Create a cleaner and more readable bar chart
+                # Convert the data to ensure numeric values for percentages
+                for i, row in viz_data.iterrows():
+                    if isinstance(row['Value'], str) and '%' in row['Value']:
+                        viz_data.at[i, 'Value'] = float(row['Value'].strip('%')) / 100
+                
+                # Create a simpler bar chart that works reliably
                 chart = alt.Chart(viz_data).mark_bar().encode(
                     y=alt.Y('Statistic:N', title=None),
                     x=alt.X('Value:Q', title='Value'),
@@ -275,10 +280,8 @@ if st.button("Compare Teams", type="primary", use_container_width=True):
                     tooltip=['Team', 'Statistic', 'Value']
                 ).properties(
                     height=len(stats_to_show) * 50  # Dynamic height based on number of stats
-                ).configure_axis(
-                    labelFontSize=12,
-                    titleFontSize=14
                 )
+                
                 st.altair_chart(chart, use_container_width=True)
             
             # Head-to-Head Comparison Tab
@@ -303,6 +306,16 @@ if st.button("Compare Teams", type="primary", use_container_width=True):
             with viz_tabs[3]:
                 if history1 is not None and history2 is not None:
                     st.subheader("Historical Game Logs")
+                    
+                    # Filter out Team_ID and GAME_ID columns if they exist
+                    if 'Team_ID' in history1.columns:
+                        history1 = history1.drop(columns=['Team_ID'])
+                    if 'GAME_ID' in history1.columns:
+                        history1 = history1.drop(columns=['GAME_ID'])
+                    if 'Team_ID' in history2.columns:
+                        history2 = history2.drop(columns=['Team_ID'])
+                    if 'GAME_ID' in history2.columns:
+                        history2 = history2.drop(columns=['GAME_ID'])
                     
                     history_tabs = st.tabs([f"{team1} Recent Games", f"{team2} Recent Games"])
                     with history_tabs[0]:
