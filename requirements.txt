@@ -2,6 +2,7 @@
 nba_api==1.8.0              # NBA stats pulling
 ollama==0.4.7               # Local LLM integration
 langchain==0.3.20           # Prompt and context chaining
+langchain-community==0.3.19 # Community extensions for langchain
 streamlit==1.43.2           # Web UI
 
 # Key dependencies (pulled from your UV install)
@@ -20,13 +21,16 @@ altair==5.5.0               # Charts in streamlit
 # Additional dependencies
 openai==1.66.3              # OpenAI API integration
 tiktoken==0.9.0             # Tokenization for OpenAI
+python-dotenv==1.0.1        # Load environment variables from .env
+
+# LangChain Community dependencies (from your UV install)
+aiohttp==3.11.14            # Async HTTP requests (langchain-community)
+dataclasses-json==0.6.7     # JSON serialization (langchain-community)
+marshmallow==3.26.1         # Data marshaling (langchain-community)
+pydantic-settings==2.8.1    # Settings management (langchain-community)
 
 # Testing dependencies
-iniconfig==2.0.0
-pluggy==1.5.0
-pytest==8.3.5
-tomli==2.2.1
-
-# Dotenv
-dotenv==0.9.9
-python-dotenv==1.0.1
+iniconfig==2.0.0            # Pytest configuration
+pluggy==1.5.0               # Pytest plugin system
+pytest==8.3.5               # Testing framework
+tomli==2.2.1                # TOML parsing for pytest
