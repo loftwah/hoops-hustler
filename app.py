@@ -264,15 +264,21 @@ if st.button("Compare Teams", type="primary", use_container_width=True):
             
             # Bar Chart Tab
             with viz_tabs[1]:
+                # Create a cleaner and more readable bar chart
                 chart = alt.Chart(viz_data).mark_bar().encode(
-                    x='Statistic',
-                    y='Value',
-                    color=alt.Color('Team', scale=alt.Scale(
+                    y=alt.Y('Statistic:N', title=None),
+                    x=alt.X('Value:Q', title='Value'),
+                    color=alt.Color('Team:N', scale=alt.Scale(
                         domain=[team1, team2],
                         range=[team1_color, team2_color]
                     )),
-                    column=alt.Column('Statistic', header=alt.Header(labelOrient='bottom'))
-                ).properties(width=80, height=300)
+                    tooltip=['Team', 'Statistic', 'Value']
+                ).properties(
+                    height=len(stats_to_show) * 50  # Dynamic height based on number of stats
+                ).configure_axis(
+                    labelFontSize=12,
+                    titleFontSize=14
+                )
                 st.altair_chart(chart, use_container_width=True)
             
             # Head-to-Head Comparison Tab
