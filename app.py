@@ -24,8 +24,8 @@ team_list = [team['full_name'] for team in teams.get_teams()]
 
 # Sidebar for options
 st.sidebar.title("Options")
-team1 = st.sidebar.selectbox("Select Team 1", team_list, index=team_list.index("Golden State Warriors") if "Golden State Warriors" in team_list else 0)
-team2 = st.sidebar.selectbox("Select Team 2", team_list, index=team_list.index("Los Angeles Lakers") if "Los Angeles Lakers" in team_list else 1)
+team1 = st.sidebar.selectbox("Select Team 1", team_list, index=team_list.index("Denver Nuggets") if "Denver Nuggets" in team_list else 0)
+team2 = st.sidebar.selectbox("Select Team 2", team_list, index=team_list.index("Miami Heat") if "Miami Heat" in team_list else 1)
 
 # Let users select which stats to display
 all_stats = ['wins', 'losses', 'ppg', 'fg_pct', 'fg3_pct', 'ft_pct', 'rebounds', 'assists', 'steals', 'blocks', 'turnovers']
