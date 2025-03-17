@@ -307,15 +307,15 @@ if st.button("Compare Teams", type="primary", use_container_width=True):
                 if history1 is not None and history2 is not None:
                     st.subheader("Historical Game Logs")
                     
-                    # Filter out Team_ID and GAME_ID columns if they exist
+                    # Filter out Team_ID and Game_ID columns if they exist
                     if 'Team_ID' in history1.columns:
                         history1 = history1.drop(columns=['Team_ID'])
-                    if 'GAME_ID' in history1.columns:
-                        history1 = history1.drop(columns=['GAME_ID'])
+                    if 'Game_ID' in history1.columns:
+                        history1 = history1.drop(columns=['Game_ID'])
                     if 'Team_ID' in history2.columns:
                         history2 = history2.drop(columns=['Team_ID'])
-                    if 'GAME_ID' in history2.columns:
-                        history2 = history2.drop(columns=['GAME_ID'])
+                    if 'Game_ID' in history2.columns:
+                        history2 = history2.drop(columns=['Game_ID'])
                     
                     history_tabs = st.tabs([f"{team1} Recent Games", f"{team2} Recent Games"])
                     with history_tabs[0]:
