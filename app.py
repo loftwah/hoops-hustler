@@ -27,6 +27,23 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# Welcome message at the top
+st.markdown("""
+<div style="text-align: center; padding: 2rem; background: rgba(0,0,0,0.05); border-radius: 10px; margin-bottom: 20px;">
+    <h2>Welcome to Hoops Hustler!</h2>
+    <p style="font-size: 1.2rem;">Select two NBA teams below and click 'Compare Teams' to see advanced stats, visualizations, and AI-powered analysis.</p>
+    <p>Features include:</p>
+    <ul style="display: inline-block; text-align: left;">
+        <li>Detailed team statistics comparison</li>
+        <li>Interactive visualizations (radar charts, bar charts)</li>
+        <li>Head-to-head statistical advantages</li>
+        <li>Historical game logs and trends</li>
+        <li>Advanced AI analysis with player insights</li>
+        <li>Social media insights and web news</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
+
 # Stat definitions
 all_stats = ['wins', 'losses', 'ppg', 'fg_pct', 'fg3_pct', 'ft_pct', 'rebounds', 'assists', 'steals', 'blocks', 'turnovers']
 stat_labels = {
@@ -364,19 +381,5 @@ if st.button("Compare Teams", type="primary", use_container_width=True):
             # Bottom action buttons - Fix for experimental_rerun
             st.button("Run Another Comparison", type="primary", use_container_width=True, key="rerun_btn", on_click=st.rerun)
 else:
-    # Welcome screen with better styling
-    st.markdown("""
-    <div style="text-align: center; padding: 2rem; background: rgba(0,0,0,0.05); border-radius: 10px;">
-        <h2>Welcome to Hoops Hustler!</h2>
-        <p style="font-size: 1.2rem;">Select two NBA teams above and click 'Compare Teams' to see advanced stats, visualizations, and AI-powered analysis.</p>
-        <p>Features include:</p>
-        <ul style="display: inline-block; text-align: left;">
-            <li>Detailed team statistics comparison</li>
-            <li>Interactive visualizations (radar charts, bar charts)</li>
-            <li>Head-to-head statistical advantages</li>
-            <li>Historical game logs and trends</li>
-            <li>Advanced AI analysis with player insights</li>
-            <li>Social media insights and web news</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
+    # Welcome screen with better styling is now at the top of the app
+    pass
